@@ -5,11 +5,20 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'be2cbaf7ab633708f417e550312c467f038fff1e',
+        'reference' => '5bd27dfd4eb4d954307fc01cdb38c6c1b6b639ec',
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
     'versions' => array(
+        'abraham/twitteroauth' => array(
+            'pretty_version' => '2.0.2',
+            'version' => '2.0.2.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../abraham/twitteroauth',
+            'aliases' => array(),
+            'reference' => '5a424e80a1200674451844fbaae8a0098a316a01',
+            'dev_requirement' => false,
+        ),
         'asm89/stack-cors' => array(
             'pretty_version' => 'v2.0.3',
             'version' => '2.0.3.0',
@@ -26,6 +35,15 @@
             'install_path' => __DIR__ . '/../brick/math',
             'aliases' => array(),
             'reference' => 'dff976c2f3487d42c1db75a3b180e2b9f0e72ce0',
+            'dev_requirement' => false,
+        ),
+        'composer/ca-bundle' => array(
+            'pretty_version' => '1.2.10',
+            'version' => '1.2.10.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/./ca-bundle',
+            'aliases' => array(),
+            'reference' => '9fdb22c2e97a614657716178093cd1da90a64aa8',
             'dev_requirement' => false,
         ),
         'cordoval/hamcrest-php' => array(
@@ -400,7 +418,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'be2cbaf7ab633708f417e550312c467f038fff1e',
+            'reference' => '5bd27dfd4eb4d954307fc01cdb38c6c1b6b639ec',
             'dev_requirement' => false,
         ),
         'laravel/sail' => array(
