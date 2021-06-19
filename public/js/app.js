@@ -1845,14 +1845,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-<<<<<<< HEAD
 /* harmony import */ var _ExampleComponent_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue");
-=======
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! js-hira-kata-romanize */ "./node_modules/js-hira-kata-romanize/Romanizer.js");
-/* harmony import */ var js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_1__);
->>>>>>> a026a36a11383d6f42ac9eea45eeb0ba5702a9cb
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! js-hira-kata-romanize */ "./node_modules/js-hira-kata-romanize/Romanizer.js");
+/* harmony import */ var js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_2__);
 //
 //
 //
@@ -1869,7 +1866,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-<<<<<<< HEAD
 //
 //
 //
@@ -1879,16 +1875,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
  //TwitterAPIから持ってきた単語をまとめたjsonファイルをインポートする
-
-=======
-//TwitterAPIから持ってきた単語をまとめたjsonファイルをインポートする
 //import trends from './trends.json'
 
 
-var r = new (js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_1___default())({
-  chouon: (js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_1___default().CHOUON_CIRCUMFLEX)
+
+var r = new (js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_2___default())({
+  chouon: (js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_2___default().CHOUON_CIRCUMFLEX)
 });
->>>>>>> a026a36a11383d6f42ac9eea45eeb0ba5702a9cb
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'App',
   data: function data() {
@@ -1906,7 +1899,7 @@ var r = new (js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_1___default())({
   mounted: function mounted() {
     var _this = this;
 
-    axios__WEBPACK_IMPORTED_MODULE_0___default().get("./trends.json").then(function (response) {
+    axios__WEBPACK_IMPORTED_MODULE_1___default().get("./trends.json").then(function (response) {
       return _this.trends = response.data[0].trends;
     })["catch"](function (error) {
       console.log('取得に失敗しました。', error);
@@ -1941,18 +1934,13 @@ var r = new (js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_1___default())({
 
       addEventListener('keydown', function (e) {
         //打ち間違えてしまったときの処理
-<<<<<<< HEAD
-        if (e.key !== _this2.word[0]) {
+        if (e.key !== _this3.word[0]) {
           //comleteしている状態だったらカウント増やさない。
-          if (_this2.words.length === 0 || _this2.word.length === 0) {
+          if (_this3.words.length === 0 || _this3.word.length === 0) {
             return;
           }
 
-          _this2.miss++;
-=======
-        if (e.key !== _this3.word[0]) {
           _this3.miss++;
->>>>>>> a026a36a11383d6f42ac9eea45eeb0ba5702a9cb
           return;
         }
 
@@ -1962,14 +1950,9 @@ var r = new (js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_1___default())({
         if (_this3.word.length === 0) {
           _this3.pressed = '';
 
-<<<<<<< HEAD
-          if (_this2.words.length === 0) {
-            _this2.word = 'Completed!　ミスの回数は' + _this2.miss + '回だったよ！';
-            _this2.miss = "CLEAR";
-=======
-          if (_this3.trend_array.length === 0) {
-            _this3.word = 'Completed!';
->>>>>>> a026a36a11383d6f42ac9eea45eeb0ba5702a9cb
+          if (_this3.words.length === 0) {
+            if (_this3.word) _this3.word = 'Completed!　ミスの回数は' + _this3.miss + '回だったよ！';
+            _this3.miss = "CLEAR";
             return;
           }
 
@@ -1978,14 +1961,10 @@ var r = new (js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_1___default())({
       });
     }
   },
-<<<<<<< HEAD
+  computed: {},
   components: {
     ExampleComponent: _ExampleComponent_vue__WEBPACK_IMPORTED_MODULE_0__.default
   }
-=======
-  computed: {},
-  components: {}
->>>>>>> a026a36a11383d6f42ac9eea45eeb0ba5702a9cb
 });
 
 /***/ }),
