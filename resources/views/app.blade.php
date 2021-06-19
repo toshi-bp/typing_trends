@@ -46,16 +46,23 @@
 	$res2 = curl_getinfo( $curl ) ;
 	curl_close( $curl ) ;
 
-    $json = substr( $res1, $res2['header_size'] ) ;
-    $json_obj = json_decode( $json ) ;
+    $json = substr( $res1, $res2['header_size']) ;
+    $json_obj = json_decode( $json ) ; //配列にしている
+    $json_obj = json_encode($json_obj, JSON_UNESCAPED_UNICODE);
 
+    $path = "../js/components";
+    $path = realpath($path);
+    $pathOfFile = $path . "/trends.json";
+    echo $path;
+    //file_put_contents($pathOfFile, $json_obj);
+    // echo $json_obj;
     // for($i =0;$i<10;$i++)
     // {
     //     var_dump ($json_obj[0]->trends[$i]->name);
     // }
 
 
-    // 取得したデータ(JSONなど)
+    //取得したデータ(JSONなど)
 
 
 
@@ -65,6 +72,14 @@
     <router-view></router-view>
 </div>
 <!-- Scripts -->
-<script src="{{ mix('/js/app.js') }}" defer></script>
+<script src="{{ mix('/js/app.js') }}" defer>
+    // Vue.createApp({
+    //     data () {
+    //         return {
+    //             array: {!! json_encode($json) !!}
+    //         }
+    //     }
+    // }).mount('App')
+</script>
 </body>
 </html>
