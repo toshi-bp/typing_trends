@@ -29,7 +29,7 @@ import ExampleComponent from './ExampleComponent.vue'
 import axios from 'axios'
 import Romanizer from 'js-hira-kata-romanize'
 const r = new Romanizer({
-    chouon: Romanizer.CHOUON_CIRCUMFLEX
+    chouon: Romanizer.CHOUON_SKIP
 });
 
 export default {
@@ -40,6 +40,7 @@ export default {
       words: ['apple', 'banana', 'grape'],
       trend_array: [],
       trends: [],
+      converted_text: '',
       word: '',
       pressed: '',
       miss: 0,
@@ -48,18 +49,26 @@ export default {
   },
   mounted () {
       axios.get("./trends.json")
-      .then(response => (this.trends = response.data[0].trends))
+      .then(response => {
+        this.trends = response.data[0].trends
+     })
       .catch(function(error) {
             console.log('取得に失敗しました。', error);
         })
   },
   created () {
     addEventListener('keydown', (e) =>{
+      let trend = ""
       if(e.key !== ' ' || this.playing){
         return
       }
+      console.log(this.trends)
       for (let i = 0; i < this.trends.length; i++) {
-        this.trend_array.push(r.romanize(this.trends[i].name))
+        //console.log(this.convertKana(this.trends[i].name))
+        console.log("入力値:" + this.trends[i].name)
+        trend = this.convertKana(this.trends[i].name)
+        console.log("配列に格納される値:" + trend)
+        this.trend_array.push(r.romanize(trend))
      }
       console.log(this.trend_array)
       this.playing = true
@@ -68,6 +77,20 @@ export default {
     })
   },
   methods: {
+    convertKana (text) {
+        //漢字からひらがなに変換するための関数
+        this.converted_text = axios.post("https://labs.goo.ne.jp/api/hiragana", {
+            app_id: "e11526019e0fe1a677884c525948a7aac1fc66516e192a5311c50275bdaaad66",
+            sentence: text.toString(),
+            output_type: "hiragana"
+        })
+        .then(response => {
+            response.data.converted
+            console.log("api叩いた結果:" + response.data.converted)
+        }
+        )
+        return this.converted_text
+    },
     setWord() {
       this.word = this.trend_array.splice(Math.floor(Math.random() * this.trend_array.length), 1)[0]
     },
@@ -89,7 +112,7 @@ export default {
           this.pressed = ''
           if(this.words.length === 0){
             if(this.word)
-            this.word = 'Completed!　ミスの回数は'+this.miss +'回だったよ！'
+            this.word = 'Completed! ミスの回数は'+this.miss +'回だったよ！'
             this.miss="CLEAR"
             return
           }

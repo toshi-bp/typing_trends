@@ -1880,7 +1880,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var r = new (js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_2___default())({
-  chouon: (js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_2___default().CHOUON_CIRCUMFLEX)
+  chouon: (js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_2___default().CHOUON_SKIP)
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'App',
@@ -1890,6 +1890,7 @@ var r = new (js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_2___default())({
       words: ['apple', 'banana', 'grape'],
       trend_array: [],
       trends: [],
+      converted_text: '',
       word: '',
       pressed: '',
       miss: 0,
@@ -1900,7 +1901,7 @@ var r = new (js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_2___default())({
     var _this = this;
 
     axios__WEBPACK_IMPORTED_MODULE_1___default().get("./trends.json").then(function (response) {
-      return _this.trends = response.data[0].trends;
+      _this.trends = response.data[0].trends;
     })["catch"](function (error) {
       console.log('取得に失敗しました。', error);
     });
@@ -1909,12 +1910,21 @@ var r = new (js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_2___default())({
     var _this2 = this;
 
     addEventListener('keydown', function (e) {
+      var trend = "";
+
       if (e.key !== ' ' || _this2.playing) {
         return;
       }
 
+      console.log(_this2.trends);
+
       for (var i = 0; i < _this2.trends.length; i++) {
-        _this2.trend_array.push(r.romanize(_this2.trends[i].name));
+        //console.log(this.convertKana(this.trends[i].name))
+        console.log("入力値:" + _this2.trends[i].name);
+        trend = _this2.convertKana(_this2.trends[i].name);
+        console.log("配列に格納される値:" + trend);
+
+        _this2.trend_array.push(r.romanize(trend));
       }
 
       console.log(_this2.trend_array);
@@ -1926,6 +1936,18 @@ var r = new (js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_2___default())({
     });
   },
   methods: {
+    convertKana: function convertKana(text) {
+      //漢字からひらがなに変換するための関数
+      this.converted_text = axios__WEBPACK_IMPORTED_MODULE_1___default().post("https://labs.goo.ne.jp/api/hiragana", {
+        app_id: "e11526019e0fe1a677884c525948a7aac1fc66516e192a5311c50275bdaaad66",
+        sentence: text.toString(),
+        output_type: "hiragana"
+      }).then(function (response) {
+        response.data.converted;
+        console.log("api叩いた結果:" + response.data.converted);
+      });
+      return this.converted_text;
+    },
     setWord: function setWord() {
       this.word = this.trend_array.splice(Math.floor(Math.random() * this.trend_array.length), 1)[0];
     },
@@ -1951,7 +1973,7 @@ var r = new (js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_2___default())({
           _this3.pressed = '';
 
           if (_this3.words.length === 0) {
-            if (_this3.word) _this3.word = 'Completed!　ミスの回数は' + _this3.miss + '回だったよ！';
+            if (_this3.word) _this3.word = 'Completed! ミスの回数は' + _this3.miss + '回だったよ！';
             _this3.miss = "CLEAR";
             return;
           }
