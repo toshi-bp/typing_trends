@@ -5,7 +5,7 @@
     </div>
     <div v-if="playing">
 
-      <p　id="query">
+      <p id="query">
             {{ pressed }}
             {{ word }}
       </p>
@@ -25,6 +25,12 @@
 <script>
 import ExampleComponent from './ExampleComponent.vue'
 //TwitterAPIから持ってきた単語をまとめたjsonファイルをインポートする
+//import trends from './trends.json'
+import axios from 'axios'
+import Romanizer from 'js-hira-kata-romanize'
+const r = new Romanizer({
+    chouon: Romanizer.CHOUON_CIRCUMFLEX
+});
 
 export default {
   name: 'App',
@@ -32,17 +38,30 @@ export default {
     return {
       //wordsはjsonファイルをObject型に変換して利用するためあくまでテスト用
       words: ['apple', 'banana', 'grape'],
+      trend_array: [],
+      trends: [],
       word: '',
       pressed: '',
       miss: 0,
       playing: false,
     }
   },
+  mounted () {
+      axios.get("./trends.json")
+      .then(response => (this.trends = response.data[0].trends))
+      .catch(function(error) {
+            console.log('取得に失敗しました。', error);
+        })
+  },
   created () {
     addEventListener('keydown', (e) =>{
       if(e.key !== ' ' || this.playing){
         return
       }
+      for (let i = 0; i < this.trends.length; i++) {
+        this.trend_array.push(r.romanize(this.trends[i].name))
+     }
+      console.log(this.trend_array)
       this.playing = true
       this.setWord()
       this.keyDown()
@@ -50,7 +69,7 @@ export default {
   },
   methods: {
     setWord() {
-      this.word = this.words.splice(Math.floor(Math.random() * this.words.length), 1)[0]
+      this.word = this.trend_array.splice(Math.floor(Math.random() * this.trend_array.length), 1)[0]
     },
     keyDown(){
       addEventListener('keydown', (e) => {
@@ -78,6 +97,8 @@ export default {
         }
       })
     }
+  },
+  computed: {
   },
   components: {
     ExampleComponent

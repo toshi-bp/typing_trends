@@ -1845,7 +1845,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+<<<<<<< HEAD
 /* harmony import */ var _ExampleComponent_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue");
+=======
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! js-hira-kata-romanize */ "./node_modules/js-hira-kata-romanize/Romanizer.js");
+/* harmony import */ var js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_1__);
+>>>>>>> a026a36a11383d6f42ac9eea45eeb0ba5702a9cb
 //
 //
 //
@@ -1862,6 +1869,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+<<<<<<< HEAD
 //
 //
 //
@@ -1872,42 +1880,68 @@ __webpack_require__.r(__webpack_exports__);
 //
  //TwitterAPIから持ってきた単語をまとめたjsonファイルをインポートする
 
+=======
+//TwitterAPIから持ってきた単語をまとめたjsonファイルをインポートする
+//import trends from './trends.json'
+
+
+var r = new (js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_1___default())({
+  chouon: (js_hira_kata_romanize__WEBPACK_IMPORTED_MODULE_1___default().CHOUON_CIRCUMFLEX)
+});
+>>>>>>> a026a36a11383d6f42ac9eea45eeb0ba5702a9cb
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'App',
   data: function data() {
     return {
       //wordsはjsonファイルをObject型に変換して利用するためあくまでテスト用
       words: ['apple', 'banana', 'grape'],
+      trend_array: [],
+      trends: [],
       word: '',
       pressed: '',
       miss: 0,
       playing: false
     };
   },
-  created: function created() {
+  mounted: function mounted() {
     var _this = this;
 
+    axios__WEBPACK_IMPORTED_MODULE_0___default().get("./trends.json").then(function (response) {
+      return _this.trends = response.data[0].trends;
+    })["catch"](function (error) {
+      console.log('取得に失敗しました。', error);
+    });
+  },
+  created: function created() {
+    var _this2 = this;
+
     addEventListener('keydown', function (e) {
-      if (e.key !== ' ' || _this.playing) {
+      if (e.key !== ' ' || _this2.playing) {
         return;
       }
 
-      _this.playing = true;
+      for (var i = 0; i < _this2.trends.length; i++) {
+        _this2.trend_array.push(r.romanize(_this2.trends[i].name));
+      }
 
-      _this.setWord();
+      console.log(_this2.trend_array);
+      _this2.playing = true;
 
-      _this.keyDown();
+      _this2.setWord();
+
+      _this2.keyDown();
     });
   },
   methods: {
     setWord: function setWord() {
-      this.word = this.words.splice(Math.floor(Math.random() * this.words.length), 1)[0];
+      this.word = this.trend_array.splice(Math.floor(Math.random() * this.trend_array.length), 1)[0];
     },
     keyDown: function keyDown() {
-      var _this2 = this;
+      var _this3 = this;
 
       addEventListener('keydown', function (e) {
         //打ち間違えてしまったときの処理
+<<<<<<< HEAD
         if (e.key !== _this2.word[0]) {
           //comleteしている状態だったらカウント増やさない。
           if (_this2.words.length === 0 || _this2.word.length === 0) {
@@ -1915,29 +1949,43 @@ __webpack_require__.r(__webpack_exports__);
           }
 
           _this2.miss++;
+=======
+        if (e.key !== _this3.word[0]) {
+          _this3.miss++;
+>>>>>>> a026a36a11383d6f42ac9eea45eeb0ba5702a9cb
           return;
         }
 
-        _this2.pressed += e.key;
-        _this2.word = _this2.word.slice(1);
+        _this3.pressed += e.key;
+        _this3.word = _this3.word.slice(1);
 
-        if (_this2.word.length === 0) {
-          _this2.pressed = '';
+        if (_this3.word.length === 0) {
+          _this3.pressed = '';
 
+<<<<<<< HEAD
           if (_this2.words.length === 0) {
             _this2.word = 'Completed!　ミスの回数は' + _this2.miss + '回だったよ！';
             _this2.miss = "CLEAR";
+=======
+          if (_this3.trend_array.length === 0) {
+            _this3.word = 'Completed!';
+>>>>>>> a026a36a11383d6f42ac9eea45eeb0ba5702a9cb
             return;
           }
 
-          _this2.setWord();
+          _this3.setWord();
         }
       });
     }
   },
+<<<<<<< HEAD
   components: {
     ExampleComponent: _ExampleComponent_vue__WEBPACK_IMPORTED_MODULE_0__.default
   }
+=======
+  computed: {},
+  components: {}
+>>>>>>> a026a36a11383d6f42ac9eea45eeb0ba5702a9cb
 });
 
 /***/ }),
@@ -17505,6 +17553,429 @@ if ( typeof noGlobal === "undefined" ) {
 return jQuery;
 } );
 
+
+/***/ }),
+
+/***/ "./node_modules/js-hira-kata-romanize/Romanizer.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/js-hira-kata-romanize/Romanizer.js ***!
+  \*********************************************************/
+/***/ ((module) => {
+
+module.exports = class Romanizer {
+    static MAPPING_HEPBURN = 'hepburn';
+    static MAPPING_KUNREI = 'kunrei';
+
+    static CHOUON_MACRON = 'macron';
+    static CHOUON_CIRCUMFLEX = 'circumflex';
+    static CHOUON_ALPHABET = 'alphabet';
+    static CHOUON_SKIP = 'skip';
+    static CHOUON_HYPHEN = 'hyphen';
+
+    static UPPER_WORD_INITIAL = 'word_initial';
+    static UPPER_SENTENCE_INITIAL = 'sentence_initial';
+    static UPPER_ALL = 'all';
+    static UPPER_NONE = 'none';
+
+    static OPTION_SET_HEPBURN = {
+        mapping: Romanizer.MAPPING_HEPBURN,
+        chouon: Romanizer.CHOUON_MACRON,
+    }
+    static OPTION_SET_KUNREI = {
+        mapping: Romanizer.MAPPING_KUNREI,
+        chouon: Romanizer.CHOUON_CIRCUMFLEX,
+    }
+
+    romanMap = {
+        'あ': 'a',
+        'い': 'i',
+        'う': 'u',
+        'え': 'e',
+        'お': 'o',
+        'か': 'ka',
+        'き': 'ki',
+        'く': 'ku',
+        'け': 'ke',
+        'こ': 'ko',
+        'さ': 'sa',
+        'し': {hepburn: 'shi', kunrei: 'si'},
+        'す': 'su',
+        'せ': 'se',
+        'そ': 'so',
+        'た': 'ta',
+        'ち': {hepburn: 'chi', kunrei: 'ti'},
+        'つ': {hepburn: 'tsu', kunrei: 'tu'},
+        'て': 'te',
+        'と': 'to',
+        'な': 'na',
+        'に': 'ni',
+        'ぬ': 'nu',
+        'ね': 'ne',
+        'の': 'no',
+        'は': 'ha',
+        'ひ': 'hi',
+        'ふ': {hepburn: 'fu', kunrei: 'hu'},
+        'へ': 'he',
+        'ほ': 'ho',
+        'ま': 'ma',
+        'み': 'mi',
+        'む': 'mu',
+        'め': 'me',
+        'も': 'mo',
+        'や': 'ya',
+        'ゆ': 'yu',
+        'よ': 'yo',
+        'ら': 'ra',
+        'り': 'ri',
+        'る': 'ru',
+        'れ': 're',
+        'ろ': 'ro',
+        'わ': 'wa',
+        'ゐ': 'wi',
+        'ゑ': 'we',
+        'を': {hepburn: 'o', kunrei: 'wo'},
+        'ん': 'n',
+        'が': 'ga',
+        'ぎ': 'gi',
+        'ぐ': 'gu',
+        'げ': 'ge',
+        'ご': 'go',
+        'ざ': 'za',
+        'じ': {hepburn: 'ji', kunrei: 'zi'},
+        'ず': 'zu',
+        'ぜ': 'ze',
+        'ぞ': 'zo',
+        'だ': 'da',
+        'ぢ': {hepburn: 'ji', kunrei: 'di'},
+        'づ': {hepburn: 'zu', kunrei: 'du'},
+        'で': 'de',
+        'ど': 'do',
+        'ば': 'ba',
+        'び': 'bi',
+        'ぶ': 'bu',
+        'べ': 'be',
+        'ぼ': 'bo',
+        'ぱ': 'pa',
+        'ぴ': 'pi',
+        'ぷ': 'pu',
+        'ぺ': 'pe',
+        'ぽ': 'po',
+        'きゃ': 'kya',
+        'きぃ': 'kyi',
+        'きゅ': 'kyu',
+        'きぇ': 'kye',
+        'きょ': 'kyo',
+        'くぁ': 'qa',
+        'くぃ': 'qi',
+        'くぇ': 'qe',
+        'くぉ': 'qo',
+        'くゃ': 'qya',
+        'くゅ': 'qyu',
+        'くょ': 'qyo',
+        'しゃ': {hepburn: 'sha', kunrei: 'sya'},
+        'しぃ': 'syi',
+        'しゅ': {hepburn: 'shu', kunrei: 'syu'},
+        'しぇ': 'sye',
+        'しょ': {hepburn: 'sho', kunrei: 'syo'},
+        'ちゃ': {hepburn: 'cha', kunrei: 'tya'},
+        'ちぃ': {hepburn: 'chi', kunrei: 'tyi'},
+        'ちゅ': {hepburn: 'chu', kunrei: 'tyu'},
+        'ちぇ': {hepburn: 'che', kunrei: 'tye'},
+        'ちょ': {hepburn: 'cho', kunrei: 'tyo'},
+        'てゃ': 'tha',
+        'てぃ': 'thi',
+        'てゅ': 'thu',
+        'てぇ': 'the',
+        'てょ': 'tho',
+        'ひゃ': 'hya',
+        'ひゅ': 'hyu',
+        'ひぇ': 'hye',
+        'ひょ': 'hyo',
+        'ふぁ': 'fa',
+        'ふぃ': 'fi',
+        'ふぇ': 'fe',
+        'ふぉ': 'fo',
+        'みゃ': 'mya',
+        'みゅ': 'myu',
+        'みぇ': 'mye',
+        'みょ': 'myo',
+        'ヴぁ': 'va',
+        'ヴぃ': 'vi',
+        'ヴぇ': 've',
+        'ヴぉ': 'vo',
+        'ぎゃ': 'gya',
+        'ぎゅ': 'gyu',
+        'ぎぇ': 'gye',
+        'ぎょ': 'gyo',
+        'じゃ': {hepburn: 'ja', kunrei: 'zya'},
+        'じゅ': {hepburn: 'ju', kunrei: 'zyu'},
+        'じぇ': 'zye',
+        'じょ': {hepburn: 'jo', kunrei: 'zyo'},
+        'ぢゃ': {hepburn: 'dya', kunrei: 'zya'},
+        'ぢゅ': {hepburn: 'dyu', kunrei: 'zya'},
+        'ぢぇ': 'dye',
+        'ぢょ': {hepburn: 'dyo', kunrei: 'zya'},
+        'びゃ': 'bya',
+        'びゅ': 'byu',
+        'びぇ': 'bye',
+        'びょ': 'byo',
+        'ぴゃ': 'pya',
+        'ぴゅ': 'pyu',
+        'ぴぇ': 'pye',
+        'ぴょ': 'pyo',
+        'りゃ': 'rya',
+        'りゅ': 'ryu',
+        'りぇ': 'rye',
+        'りょ': 'ryo',
+        'にゃ': 'nya',
+        'にゅ': 'nyu',
+        'にぇ': 'nye',
+        'にょ': 'nyo',
+        "ゔ": 'bu',
+        '、': ', ',
+        '，': ', ',
+        '。': '. ',
+        'ぁ': 'a',
+        'ぃ': 'i',
+        'ぅ': 'u',
+        'ぇ': 'e',
+        'ぉ': 'o',
+    };
+
+    sutegana = ['ぁ', 'ぃ', 'ぅ', 'ぇ', 'ぉ', 'ゃ', 'ゅ', 'ょ'];
+
+    sokuon = 'っ';
+
+    chouonMap = {
+        'a': {
+            'aa': {macron: 'ā', circumflex: 'â'}
+        },
+        'i': {
+            'ii': {macron: 'ī', circumflex: 'î'}
+        },
+        'u': {
+            'uu': {macron: 'ū', circumflex: 'û'},
+            'ou': {macron: 'ō', circumflex: 'ô'}
+        },
+        'e': {
+            'ee': {macron: 'ē', circumflex: 'ê'}
+        },
+        'o': {
+            'oo': {macron: 'ō', circumflex: 'ô'}
+        },
+    }
+
+    mappingMode = Romanizer.MAPPING_HEPBURN;
+    chouonMode = Romanizer.CHOUON_MACRON;
+    upperMode = Romanizer.UPPER_WORD_INITIAL;
+
+    constructor(option) {
+        if (option && 'mapping' in option) {
+            this.mappingMode = option.mapping;
+        }
+
+        if (option && 'chouon' in option) {
+            this.chouonMode = option.chouon;
+        }
+
+        if (option && 'upper' in option) {
+            this.upperMode = option.upper;
+        }
+    }
+
+
+    romanize(_text) {
+        const text = this.kanaToHira(_text);
+        let romanText = '';
+        for (let i = 0; i < text.length;) {
+            const char = this.getChar(text, i);
+            const romanChar = this.getRomanChar(text, i, char, romanText);
+
+            romanText += romanChar + (this.isNeedApostrophe(text, i) ? '\'' : '');
+            i += char.length;
+        }
+        return this.upper(this.convertChouon(romanText));
+    }
+
+    /**
+     * 日本語の文字を取得する
+     * 以下の条件に合致する場合は捨て仮名も含めた２文字を取得します。
+     * ・次の文字が捨て仮名である
+     * ・捨て仮名を含めた２文字がromanMapに存在する
+     *
+     * romanMapに存在しない場合は１文字づつ処理するためにこのような挙動になっています。
+     *
+     * @param text
+     * @param i
+     * @returns {string|*}
+     */
+    getChar(text, i) {
+        if (this.isWithSutegana(text, i)) {
+            const charWithSutegana = text.substr(i, 2);
+            return charWithSutegana in this.romanMap ? charWithSutegana : text[i];
+        } else {
+            return text[i];
+        }
+    }
+
+    /**
+     * 日本語の文字に対応するローマ字を取得する
+     * @param text
+     * @param i
+     * @param char
+     * @param romanText
+     * @returns {*}
+     */
+    getRomanChar(text, i, char, romanText) {
+        let romanChar = char;
+
+        if (char === 'ー') {
+            romanChar = romanText[romanText.length - 1];
+        } else if (char === 'っ') {
+            return '';
+        } else if (char in this.romanMap) {
+            if (typeof this.romanMap[char] === 'object') {
+                romanChar = this.romanMap[char][this.mappingMode];
+            } else {
+                romanChar = this.romanMap[char]
+            }
+        }
+
+        // 1文字前が促音なら子音を２つにする
+        if (text[i - 1] === this.sokuon) {
+            romanChar = romanChar[0] + romanChar;
+        }
+
+        return romanChar;
+    }
+
+    /**
+     * 次の文字が捨て仮名の場合、真を返します
+     *
+     * @param text
+     * @param i
+     * @returns {boolean}
+     */
+    isWithSutegana(text, i) {
+        const nextIdx = i + 1;
+        if (nextIdx >= text.length) {
+            return false;
+        }
+
+        const char = text[nextIdx];
+        return this.sutegana.includes(char);
+    }
+
+    convertChouon(romanText) {
+        if (this.chouonMode === 'alphabet') {
+            return romanText;
+        }
+
+        let result = romanText[0];
+        let prevCharIsChouon = false;
+        for (let i = 1; i < romanText.length; i++) {
+            const char = romanText[i];
+            const twoChar = romanText.substr(i - 1, 2);
+
+            if (!prevCharIsChouon && char in this.chouonMap && twoChar in this.chouonMap[char]) {
+                prevCharIsChouon = true;
+                if (this.chouonMode === 'skip') continue;
+
+                if (this.chouonMode === 'hyphen') {
+                    result += '-';
+                } else {
+                    result = result.substr(0, result.length - 1) + this.chouonMap[char][twoChar][this.chouonMode];
+                }
+            } else {
+                result += char;
+                prevCharIsChouon = false;
+            }
+        }
+        return result;
+    }
+
+    upper(romanText) {
+        switch (this.upperMode) {
+            case Romanizer.UPPER_WORD_INITIAL: return this.upperWordInitial(romanText);
+            case Romanizer.UPPER_SENTENCE_INITIAL: return this.upperSentenceInitial(romanText);
+            case Romanizer.UPPER_ALL: return this.upperAll(romanText);
+            case Romanizer.UPPER_NONE: return romanText;
+            default: throw new Error('upperに不正な値が指定されています')
+        }
+    }
+
+    upperWordInitial(romanText) {
+        let result = romanText[0].toUpperCase();
+        for (let i = 1; i < romanText.length; i++) {
+            const char = romanText[i];
+            const prevChar = romanText.substr(i - 1, 1);
+
+            if (prevChar.match(/\s/)) {
+                result += char.toUpperCase();
+            } else {
+                result += char;
+            }
+        }
+        return result;
+    }
+
+    upperSentenceInitial(romanText) {
+        let result = '';
+        let inSentence = false;
+        for (let i = 0; i < romanText.length; i++) {
+            const char = romanText[i];
+
+            if (char.match(/[a-zA-Zāâīîūûēêōô]/) && inSentence === false) {
+                result += char.toUpperCase();
+                inSentence = true;
+            } else {
+                if (char === '.') {
+                    inSentence = false;
+                }
+                result += char;
+            }
+        }
+        return result;
+    }
+
+    upperAll(romanText) {
+        let result = '';
+        for (let i = 0; i < romanText.length; i++) {
+            const char = romanText[i];
+            result += char.toUpperCase();
+        }
+        return result;
+    }
+
+    /**
+     * 以下のいずれかに該当する場合は真を返す
+     *
+     * ・撥音「ん」の後に母音やヤ行音が来てナ行音と区別できない場合
+     * ・文の末尾に促音がある場合
+     *
+     * @param text
+     * @param i
+     * @returns {boolean}
+     */
+    isNeedApostrophe(text, i) {
+        if (text[i] === 'ん' && ['あ', 'い', 'う', 'え', 'お', 'や', 'ゆ', 'よ'].includes(text[i + 1])) {
+            return true;
+        }
+
+        if (text[i] === this.sokuon && i + 1 >= text.length) {
+            return true;
+        }
+
+        return false;
+    }
+
+    kanaToHira(str) {
+        return str.replace(/[\u30a1-\u30f6]/g, function (match) {
+            const chr = match.charCodeAt(0) - 0x60;
+            return String.fromCharCode(chr);
+        });
+    }
+}
 
 /***/ }),
 
@@ -37558,6 +38029,315 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/App.vue?vue&type=style&index=0&lang=css&":
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/App.vue?vue&type=style&index=0&lang=css& ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./App.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/App.vue?vue&type=style&index=0&lang=css&");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_1__.default, options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_1__.default.locals || {});
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js":
+/*!****************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js ***!
+  \****************************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+
+var isOldIE = function isOldIE() {
+  var memo;
+  return function memorize() {
+    if (typeof memo === 'undefined') {
+      // Test for IE <= 9 as proposed by Browserhacks
+      // @see http://browserhacks.com/#hack-e71d8692f65334173fee715c222cb805
+      // Tests for existence of standard globals is to allow style-loader
+      // to operate correctly into non-standard environments
+      // @see https://github.com/webpack-contrib/style-loader/issues/177
+      memo = Boolean(window && document && document.all && !window.atob);
+    }
+
+    return memo;
+  };
+}();
+
+var getTarget = function getTarget() {
+  var memo = {};
+  return function memorize(target) {
+    if (typeof memo[target] === 'undefined') {
+      var styleTarget = document.querySelector(target); // Special case to return head of iframe instead of iframe itself
+
+      if (window.HTMLIFrameElement && styleTarget instanceof window.HTMLIFrameElement) {
+        try {
+          // This will throw an exception if access to iframe is blocked
+          // due to cross-origin restrictions
+          styleTarget = styleTarget.contentDocument.head;
+        } catch (e) {
+          // istanbul ignore next
+          styleTarget = null;
+        }
+      }
+
+      memo[target] = styleTarget;
+    }
+
+    return memo[target];
+  };
+}();
+
+var stylesInDom = [];
+
+function getIndexByIdentifier(identifier) {
+  var result = -1;
+
+  for (var i = 0; i < stylesInDom.length; i++) {
+    if (stylesInDom[i].identifier === identifier) {
+      result = i;
+      break;
+    }
+  }
+
+  return result;
+}
+
+function modulesToDom(list, options) {
+  var idCountMap = {};
+  var identifiers = [];
+
+  for (var i = 0; i < list.length; i++) {
+    var item = list[i];
+    var id = options.base ? item[0] + options.base : item[0];
+    var count = idCountMap[id] || 0;
+    var identifier = "".concat(id, " ").concat(count);
+    idCountMap[id] = count + 1;
+    var index = getIndexByIdentifier(identifier);
+    var obj = {
+      css: item[1],
+      media: item[2],
+      sourceMap: item[3]
+    };
+
+    if (index !== -1) {
+      stylesInDom[index].references++;
+      stylesInDom[index].updater(obj);
+    } else {
+      stylesInDom.push({
+        identifier: identifier,
+        updater: addStyle(obj, options),
+        references: 1
+      });
+    }
+
+    identifiers.push(identifier);
+  }
+
+  return identifiers;
+}
+
+function insertStyleElement(options) {
+  var style = document.createElement('style');
+  var attributes = options.attributes || {};
+
+  if (typeof attributes.nonce === 'undefined') {
+    var nonce =  true ? __webpack_require__.nc : 0;
+
+    if (nonce) {
+      attributes.nonce = nonce;
+    }
+  }
+
+  Object.keys(attributes).forEach(function (key) {
+    style.setAttribute(key, attributes[key]);
+  });
+
+  if (typeof options.insert === 'function') {
+    options.insert(style);
+  } else {
+    var target = getTarget(options.insert || 'head');
+
+    if (!target) {
+      throw new Error("Couldn't find a style target. This probably means that the value for the 'insert' parameter is invalid.");
+    }
+
+    target.appendChild(style);
+  }
+
+  return style;
+}
+
+function removeStyleElement(style) {
+  // istanbul ignore if
+  if (style.parentNode === null) {
+    return false;
+  }
+
+  style.parentNode.removeChild(style);
+}
+/* istanbul ignore next  */
+
+
+var replaceText = function replaceText() {
+  var textStore = [];
+  return function replace(index, replacement) {
+    textStore[index] = replacement;
+    return textStore.filter(Boolean).join('\n');
+  };
+}();
+
+function applyToSingletonTag(style, index, remove, obj) {
+  var css = remove ? '' : obj.media ? "@media ".concat(obj.media, " {").concat(obj.css, "}") : obj.css; // For old IE
+
+  /* istanbul ignore if  */
+
+  if (style.styleSheet) {
+    style.styleSheet.cssText = replaceText(index, css);
+  } else {
+    var cssNode = document.createTextNode(css);
+    var childNodes = style.childNodes;
+
+    if (childNodes[index]) {
+      style.removeChild(childNodes[index]);
+    }
+
+    if (childNodes.length) {
+      style.insertBefore(cssNode, childNodes[index]);
+    } else {
+      style.appendChild(cssNode);
+    }
+  }
+}
+
+function applyToTag(style, options, obj) {
+  var css = obj.css;
+  var media = obj.media;
+  var sourceMap = obj.sourceMap;
+
+  if (media) {
+    style.setAttribute('media', media);
+  } else {
+    style.removeAttribute('media');
+  }
+
+  if (sourceMap && typeof btoa !== 'undefined') {
+    css += "\n/*# sourceMappingURL=data:application/json;base64,".concat(btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))), " */");
+  } // For old IE
+
+  /* istanbul ignore if  */
+
+
+  if (style.styleSheet) {
+    style.styleSheet.cssText = css;
+  } else {
+    while (style.firstChild) {
+      style.removeChild(style.firstChild);
+    }
+
+    style.appendChild(document.createTextNode(css));
+  }
+}
+
+var singleton = null;
+var singletonCounter = 0;
+
+function addStyle(obj, options) {
+  var style;
+  var update;
+  var remove;
+
+  if (options.singleton) {
+    var styleIndex = singletonCounter++;
+    style = singleton || (singleton = insertStyleElement(options));
+    update = applyToSingletonTag.bind(null, style, styleIndex, false);
+    remove = applyToSingletonTag.bind(null, style, styleIndex, true);
+  } else {
+    style = insertStyleElement(options);
+    update = applyToTag.bind(null, style, options);
+
+    remove = function remove() {
+      removeStyleElement(style);
+    };
+  }
+
+  update(obj);
+  return function updateStyle(newObj) {
+    if (newObj) {
+      if (newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap) {
+        return;
+      }
+
+      update(obj = newObj);
+    } else {
+      remove();
+    }
+  };
+}
+
+module.exports = function (list, options) {
+  options = options || {}; // Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+  // tags it will allow on a page
+
+  if (!options.singleton && typeof options.singleton !== 'boolean') {
+    options.singleton = isOldIE();
+  }
+
+  list = list || [];
+  var lastIdentifiers = modulesToDom(list, options);
+  return function update(newList) {
+    newList = newList || [];
+
+    if (Object.prototype.toString.call(newList) !== '[object Array]') {
+      return;
+    }
+
+    for (var i = 0; i < lastIdentifiers.length; i++) {
+      var identifier = lastIdentifiers[i];
+      var index = getIndexByIdentifier(identifier);
+      stylesInDom[index].references--;
+    }
+
+    var newLastIdentifiers = modulesToDom(newList, options);
+
+    for (var _i = 0; _i < lastIdentifiers.length; _i++) {
+      var _identifier = lastIdentifiers[_i];
+
+      var _index = getIndexByIdentifier(_identifier);
+
+      if (stylesInDom[_index].references === 0) {
+        stylesInDom[_index].updater();
+
+        stylesInDom.splice(_index, 1);
+      }
+    }
+
+    lastIdentifiers = newLastIdentifiers;
+  };
+};
+
+/***/ }),
+
 /***/ "./resources/js/components/App.vue":
 /*!*****************************************!*\
   !*** ./resources/js/components/App.vue ***!
@@ -37670,6 +38450,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/App.vue?vue&type=style&index=0&lang=css&":
+/*!**************************************************************************!*\
+  !*** ./resources/js/components/App.vue?vue&type=style&index=0&lang=css& ***!
+  \**************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader/dist/cjs.js!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./App.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/App.vue?vue&type=style&index=0&lang=css&");
+
+
+/***/ }),
+
 /***/ "./resources/js/components/App.vue?vue&type=template&id=332fccf4&":
 /*!************************************************************************!*\
   !*** ./resources/js/components/App.vue?vue&type=template&id=332fccf4& ***!
@@ -37700,23 +38493,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ExampleComponent.vue?vue&type=template&id=299e239e& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ExampleComponent.vue?vue&type=template&id=299e239e&");
-
-
-/***/ }),
-
-/***/ "./resources/js/components/App.vue?vue&type=style&index=0&lang=css&":
-/*!**************************************************************************!*\
-  !*** ./resources/js/components/App.vue?vue&type=style&index=0&lang=css& ***!
-  \**************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_style_loader_index_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-style-loader/index.js!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./App.vue?vue&type=style&index=0&lang=css& */ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/App.vue?vue&type=style&index=0&lang=css&");
-/* harmony import */ var _node_modules_vue_style_loader_index_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_vue_style_loader_index_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ var __WEBPACK_REEXPORT_OBJECT__ = {};
-/* harmony reexport (unknown) */ for(const __WEBPACK_IMPORT_KEY__ in _node_modules_vue_style_loader_index_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== "default") __WEBPACK_REEXPORT_OBJECT__[__WEBPACK_IMPORT_KEY__] = () => _node_modules_vue_style_loader_index_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[__WEBPACK_IMPORT_KEY__]
-/* harmony reexport (unknown) */ __webpack_require__.d(__webpack_exports__, __WEBPACK_REEXPORT_OBJECT__);
 
 
 /***/ }),
@@ -41074,307 +41850,6 @@ if (inBrowser && window.Vue) {
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (VueRouter);
-
-
-/***/ }),
-
-/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/App.vue?vue&type=style&index=0&lang=css&":
-/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-style-loader/index.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/App.vue?vue&type=style&index=0&lang=css& ***!
-  \***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./App.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/App.vue?vue&type=style&index=0&lang=css&");
-if(content.__esModule) content = content.default;
-if(typeof content === 'string') content = [[module.id, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var add = __webpack_require__(/*! !../../../node_modules/vue-style-loader/lib/addStylesClient.js */ "./node_modules/vue-style-loader/lib/addStylesClient.js").default
-var update = add("1bdf4699", content, false, {});
-// Hot Module Replacement
-if(false) {}
-
-/***/ }),
-
-/***/ "./node_modules/vue-style-loader/lib/addStylesClient.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/vue-style-loader/lib/addStylesClient.js ***!
-  \**************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ addStylesClient)
-/* harmony export */ });
-/* harmony import */ var _listToStyles__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./listToStyles */ "./node_modules/vue-style-loader/lib/listToStyles.js");
-/*
-  MIT License http://www.opensource.org/licenses/mit-license.php
-  Author Tobias Koppers @sokra
-  Modified by Evan You @yyx990803
-*/
-
-
-
-var hasDocument = typeof document !== 'undefined'
-
-if (typeof DEBUG !== 'undefined' && DEBUG) {
-  if (!hasDocument) {
-    throw new Error(
-    'vue-style-loader cannot be used in a non-browser environment. ' +
-    "Use { target: 'node' } in your Webpack config to indicate a server-rendering environment."
-  ) }
-}
-
-/*
-type StyleObject = {
-  id: number;
-  parts: Array<StyleObjectPart>
-}
-
-type StyleObjectPart = {
-  css: string;
-  media: string;
-  sourceMap: ?string
-}
-*/
-
-var stylesInDom = {/*
-  [id: number]: {
-    id: number,
-    refs: number,
-    parts: Array<(obj?: StyleObjectPart) => void>
-  }
-*/}
-
-var head = hasDocument && (document.head || document.getElementsByTagName('head')[0])
-var singletonElement = null
-var singletonCounter = 0
-var isProduction = false
-var noop = function () {}
-var options = null
-var ssrIdKey = 'data-vue-ssr-id'
-
-// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
-// tags it will allow on a page
-var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\b/.test(navigator.userAgent.toLowerCase())
-
-function addStylesClient (parentId, list, _isProduction, _options) {
-  isProduction = _isProduction
-
-  options = _options || {}
-
-  var styles = (0,_listToStyles__WEBPACK_IMPORTED_MODULE_0__.default)(parentId, list)
-  addStylesToDom(styles)
-
-  return function update (newList) {
-    var mayRemove = []
-    for (var i = 0; i < styles.length; i++) {
-      var item = styles[i]
-      var domStyle = stylesInDom[item.id]
-      domStyle.refs--
-      mayRemove.push(domStyle)
-    }
-    if (newList) {
-      styles = (0,_listToStyles__WEBPACK_IMPORTED_MODULE_0__.default)(parentId, newList)
-      addStylesToDom(styles)
-    } else {
-      styles = []
-    }
-    for (var i = 0; i < mayRemove.length; i++) {
-      var domStyle = mayRemove[i]
-      if (domStyle.refs === 0) {
-        for (var j = 0; j < domStyle.parts.length; j++) {
-          domStyle.parts[j]()
-        }
-        delete stylesInDom[domStyle.id]
-      }
-    }
-  }
-}
-
-function addStylesToDom (styles /* Array<StyleObject> */) {
-  for (var i = 0; i < styles.length; i++) {
-    var item = styles[i]
-    var domStyle = stylesInDom[item.id]
-    if (domStyle) {
-      domStyle.refs++
-      for (var j = 0; j < domStyle.parts.length; j++) {
-        domStyle.parts[j](item.parts[j])
-      }
-      for (; j < item.parts.length; j++) {
-        domStyle.parts.push(addStyle(item.parts[j]))
-      }
-      if (domStyle.parts.length > item.parts.length) {
-        domStyle.parts.length = item.parts.length
-      }
-    } else {
-      var parts = []
-      for (var j = 0; j < item.parts.length; j++) {
-        parts.push(addStyle(item.parts[j]))
-      }
-      stylesInDom[item.id] = { id: item.id, refs: 1, parts: parts }
-    }
-  }
-}
-
-function createStyleElement () {
-  var styleElement = document.createElement('style')
-  styleElement.type = 'text/css'
-  head.appendChild(styleElement)
-  return styleElement
-}
-
-function addStyle (obj /* StyleObjectPart */) {
-  var update, remove
-  var styleElement = document.querySelector('style[' + ssrIdKey + '~="' + obj.id + '"]')
-
-  if (styleElement) {
-    if (isProduction) {
-      // has SSR styles and in production mode.
-      // simply do nothing.
-      return noop
-    } else {
-      // has SSR styles but in dev mode.
-      // for some reason Chrome can't handle source map in server-rendered
-      // style tags - source maps in <style> only works if the style tag is
-      // created and inserted dynamically. So we remove the server rendered
-      // styles and inject new ones.
-      styleElement.parentNode.removeChild(styleElement)
-    }
-  }
-
-  if (isOldIE) {
-    // use singleton mode for IE9.
-    var styleIndex = singletonCounter++
-    styleElement = singletonElement || (singletonElement = createStyleElement())
-    update = applyToSingletonTag.bind(null, styleElement, styleIndex, false)
-    remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true)
-  } else {
-    // use multi-style-tag mode in all other cases
-    styleElement = createStyleElement()
-    update = applyToTag.bind(null, styleElement)
-    remove = function () {
-      styleElement.parentNode.removeChild(styleElement)
-    }
-  }
-
-  update(obj)
-
-  return function updateStyle (newObj /* StyleObjectPart */) {
-    if (newObj) {
-      if (newObj.css === obj.css &&
-          newObj.media === obj.media &&
-          newObj.sourceMap === obj.sourceMap) {
-        return
-      }
-      update(obj = newObj)
-    } else {
-      remove()
-    }
-  }
-}
-
-var replaceText = (function () {
-  var textStore = []
-
-  return function (index, replacement) {
-    textStore[index] = replacement
-    return textStore.filter(Boolean).join('\n')
-  }
-})()
-
-function applyToSingletonTag (styleElement, index, remove, obj) {
-  var css = remove ? '' : obj.css
-
-  if (styleElement.styleSheet) {
-    styleElement.styleSheet.cssText = replaceText(index, css)
-  } else {
-    var cssNode = document.createTextNode(css)
-    var childNodes = styleElement.childNodes
-    if (childNodes[index]) styleElement.removeChild(childNodes[index])
-    if (childNodes.length) {
-      styleElement.insertBefore(cssNode, childNodes[index])
-    } else {
-      styleElement.appendChild(cssNode)
-    }
-  }
-}
-
-function applyToTag (styleElement, obj) {
-  var css = obj.css
-  var media = obj.media
-  var sourceMap = obj.sourceMap
-
-  if (media) {
-    styleElement.setAttribute('media', media)
-  }
-  if (options.ssrId) {
-    styleElement.setAttribute(ssrIdKey, obj.id)
-  }
-
-  if (sourceMap) {
-    // https://developer.chrome.com/devtools/docs/javascript-debugging
-    // this makes source maps inside style tags work properly in Chrome
-    css += '\n/*# sourceURL=' + sourceMap.sources[0] + ' */'
-    // http://stackoverflow.com/a/26603875
-    css += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + ' */'
-  }
-
-  if (styleElement.styleSheet) {
-    styleElement.styleSheet.cssText = css
-  } else {
-    while (styleElement.firstChild) {
-      styleElement.removeChild(styleElement.firstChild)
-    }
-    styleElement.appendChild(document.createTextNode(css))
-  }
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/vue-style-loader/lib/listToStyles.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/vue-style-loader/lib/listToStyles.js ***!
-  \***********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ listToStyles)
-/* harmony export */ });
-/**
- * Translates the list format produced by css-loader into something
- * easier to manipulate.
- */
-function listToStyles (parentId, list) {
-  var styles = []
-  var newStyles = {}
-  for (var i = 0; i < list.length; i++) {
-    var item = list[i]
-    var id = item[0]
-    var css = item[1]
-    var media = item[2]
-    var sourceMap = item[3]
-    var part = {
-      id: parentId + ':' + i,
-      css: css,
-      media: media,
-      sourceMap: sourceMap
-    }
-    if (!newStyles[id]) {
-      styles.push(newStyles[id] = { id: id, parts: [part] })
-    } else {
-      newStyles[id].parts.push(part)
-    }
-  }
-  return styles
-}
 
 
 /***/ }),
