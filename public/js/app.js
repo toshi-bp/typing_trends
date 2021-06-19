@@ -1845,6 +1845,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _ExampleComponent_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue");
 //
 //
 //
@@ -1861,7 +1862,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//TwitterAPIから持ってきた単語をまとめたjsonファイルをインポートする
+//
+//
+//
+//
+//
+//
+//
+//
+ //TwitterAPIから持ってきた単語をまとめたjsonファイルをインポートする
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'App',
   data: function data() {
@@ -1899,6 +1909,11 @@ __webpack_require__.r(__webpack_exports__);
       addEventListener('keydown', function (e) {
         //打ち間違えてしまったときの処理
         if (e.key !== _this2.word[0]) {
+          //comleteしている状態だったらカウント増やさない。
+          if (_this2.words.length === 0 || _this2.word.length === 0) {
+            return;
+          }
+
           _this2.miss++;
           return;
         }
@@ -1910,7 +1925,8 @@ __webpack_require__.r(__webpack_exports__);
           _this2.pressed = '';
 
           if (_this2.words.length === 0) {
-            _this2.word = 'Completed!';
+            _this2.word = 'Completed!　ミスの回数は' + _this2.miss + '回だったよ！';
+            _this2.miss = "CLEAR";
             return;
           }
 
@@ -1919,7 +1935,9 @@ __webpack_require__.r(__webpack_exports__);
       });
     }
   },
-  components: {}
+  components: {
+    ExampleComponent: _ExampleComponent_vue__WEBPACK_IMPORTED_MODULE_0__.default
+  }
 });
 
 /***/ }),
@@ -6515,7 +6533,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n#app {\n  font-family: Avenir, Helvetica, Arial, sans-serif;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  text-align: center;\n  color: #2c3e50;\n  margin-top: 60px;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n#app {\n  font-family: Avenir, Helvetica, Arial, sans-serif;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  text-align: center;\n  color: #2c3e50;\n  margin: 60px;\n}\n#query\n{\n    font-size: 30px;\n    font-weight:bold\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -37720,11 +37738,18 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
+    _c("div", { attrs: { id: "app" } }, [_c("Example-component")], 1),
+    _vm._v(" "),
     _vm.playing
       ? _c("div", [
-          _c("p", [
-            _c("span", [_vm._v(_vm._s(_vm.pressed))]),
-            _vm._v(_vm._s(_vm.word) + "\n    ")
+          _c("p", { attrs: { id: "query" } }, [
+            _vm._v(
+              "\n          " +
+                _vm._s(_vm.pressed) +
+                "\n          " +
+                _vm._s(_vm.word) +
+                "\n    "
+            )
           ]),
           _vm._v(" "),
           _c("p", [_vm._v("\n      miss:" + _vm._s(_vm.miss) + "\n    ")])
@@ -37767,12 +37792,12 @@ var staticRenderFns = [
         _c("div", { staticClass: "col-md-8" }, [
           _c("div", { staticClass: "card" }, [
             _c("div", { staticClass: "card-header" }, [
-              _vm._v("Example Component")
+              _vm._v("トレンドタイピングゲーム")
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "card-body" }, [
               _vm._v(
-                "\n                    I'm an example component.\n                "
+                "\n                    Twitterでトレンドに上がってる言葉が表示されるよ！\n                "
               )
             ])
           ])

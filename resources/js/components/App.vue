@@ -1,12 +1,20 @@
 <template>
   <div>
+    <div id="app">
+        <Example-component></Example-component>
+    </div>
     <div v-if="playing">
-      <p>
-        <span>{{ pressed }}</span>{{ word }}
+
+      <p　id="query">
+            {{ pressed }}
+            {{ word }}
       </p>
+
       <p>
         miss:{{ miss }}
       </p>
+
+
     </div>
     <div v-else>
       スペースボタンを押してください
@@ -15,6 +23,7 @@
 </template>
 
 <script>
+import ExampleComponent from './ExampleComponent.vue'
 //TwitterAPIから持ってきた単語をまとめたjsonファイルをインポートする
 
 export default {
@@ -47,6 +56,11 @@ export default {
       addEventListener('keydown', (e) => {
         //打ち間違えてしまったときの処理
         if(e.key !== this.word[0]){
+          //comleteしている状態だったらカウント増やさない。
+          if(this.words.length === 0 ||this.word.length === 0)
+          {
+              return
+          }
           this.miss++
           return
         }
@@ -55,7 +69,9 @@ export default {
         if(this.word.length === 0){
           this.pressed = ''
           if(this.words.length === 0){
-            this.word = 'Completed!'
+            if(this.word)
+            this.word = 'Completed!　ミスの回数は'+this.miss +'回だったよ！'
+            this.miss="CLEAR"
             return
           }
           this.setWord()
@@ -64,7 +80,9 @@ export default {
     }
   },
   components: {
+    ExampleComponent
   }
+
 }
 </script>
 
@@ -75,6 +93,13 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin: 60px;
+
+}
+#query
+{
+    font-size: 30px;
+    font-weight:bold
 }
 </style>
+
