@@ -48,13 +48,13 @@ export default {
     }
   },
   mounted () {
-      axios.get("./trends.json")
-      .then(response => {
+    axios.get("./trends.json")
+    .then(response => {
         this.trends = response.data[0].trends
-     })
-      .catch(function(error) {
-            console.log('取得に失敗しました。', error);
-        })
+    })
+    .catch(function(error) {
+        console.log('取得に失敗しました。', error);
+    })
   },
   created () {
     addEventListener('keydown', (e) =>{
@@ -66,30 +66,35 @@ export default {
       for (let i = 0; i < this.trends.length; i++) {
         //console.log(this.convertKana(this.trends[i].name))
         console.log("入力値:" + this.trends[i].name)
-        trend = this.convertKana(this.trends[i].name)
-        console.log("配列に格納される値:" + trend)
-        this.trend_array.push(r.romanize(trend))
+        //trend = this.convertKana(this.trends[i].name).then( a => console.log(a))
+        this.convertKana(this.trends[i].name)
+        //const hoge = trend.then( a => console.log("配列に格納される値:" + a))
+        //console.log("resolveの返り値" + Promise.resolve(hoge))
+        //console.log("配列に格納される値:" + hoge)
      }
       console.log(this.trend_array)
       this.playing = true
-      this.setWord()
-      this.keyDown()
+      //this.setWord()
+      //this.keyDown()
     })
   },
   methods: {
-    convertKana (text) {
+      async convertKana (text) {
         //漢字からひらがなに変換するための関数
-        this.converted_text = axios.post("https://labs.goo.ne.jp/api/hiragana", {
+        axios.post("https://labs.goo.ne.jp/api/hiragana", {
             app_id: "e11526019e0fe1a677884c525948a7aac1fc66516e192a5311c50275bdaaad66",
             sentence: text.toString(),
             output_type: "hiragana"
         })
         .then(response => {
-            response.data.converted
-            console.log("api叩いた結果:" + response.data.converted)
+            this.converted_text = response.data.converted
+            this.trend_array.push(r.romanize(this.converted_text))
+            this.setWord()
+            this.keyDown()
+            console.log("api叩いた結果:" + this.converted_text)
         }
         )
-        return this.converted_text
+        //return this.convert_text
     },
     setWord() {
       this.word = this.trend_array.splice(Math.floor(Math.random() * this.trend_array.length), 1)[0]
