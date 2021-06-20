@@ -47,14 +47,21 @@ export default {
       playing: false,
     }
   },
-  mounted () {
-    axios.get("./trends.json")
+  //おそらくaxiosは非同期通信でこの通信が終わっているという保証がないとobserver型で帰ってしまう。
+  async mounted () {
+
+    await axios.get("./trends.json")
     .then(response => {
         this.trends = response.data[0].trends
     })
     .catch(function(error) {
         console.log('取得に失敗しました。', error);
     })
+    //ここだとaxios.getが　確実に終わってから実行できる
+    for (let i = 0; i < 2; i++) {
+        this.convertKana(this.trends[i].name)
+     }
+
   },
   created () {
     addEventListener('keydown', (e) =>{
@@ -62,49 +69,48 @@ export default {
       if(e.key !== ' ' || this.playing){
         return
       }
-      console.log(this.trends)
-      for (let i = 0; i < this.trends.length; i++) {
-        //console.log(this.convertKana(this.trends[i].name))
-        console.log("入力値:" + this.trends[i].name)
-        //trend = this.convertKana(this.trends[i].name).then( a => console.log(a))
-        this.convertKana(this.trends[i].name)
-        //const hoge = trend.then( a => console.log("配列に格納される値:" + a))
-        //console.log("resolveの返り値" + Promise.resolve(hoge))
-        //console.log("配列に格納される値:" + hoge)
-     }
-      console.log(this.trend_array)
-      this.playing = true
-      //this.setWord()
-      //this.keyDown()
+
+    //  console.log("trendsara",this.trend_array)
+
+    this.playing = true
+
+    //observerで帰ってきた時に強制的に配列にするおまじない
+    this.trend_array = JSON.parse(JSON.stringify(this.trend_array))
+    this.setWord()
+    this.keyDown()
+
     })
   },
   methods: {
-      async convertKana (text) {
+       convertKana (text) {
         //漢字からひらがなに変換するための関数
-        axios.post("https://labs.goo.ne.jp/api/hiragana", {
-            app_id: "e11526019e0fe1a677884c525948a7aac1fc66516e192a5311c50275bdaaad66",
+         axios.post("https://labs.goo.ne.jp/api/hiragana", {
+            app_id: "de47d0f2e0fcbd301c3e1a51ad66c025f994b1f1e1a6fcbc3eb534388516cc96",
             sentence: text.toString(),
             output_type: "hiragana"
         })
         .then(response => {
             this.converted_text = response.data.converted
             this.trend_array.push(r.romanize(this.converted_text))
-            this.setWord()
-            this.keyDown()
+
             console.log("api叩いた結果:" + this.converted_text)
         }
         )
-        //return this.convert_text
+
     },
+
     setWord() {
-      this.word = this.trend_array.splice(Math.floor(Math.random() * this.trend_array.length), 1)[0]
+        this.word = this.trend_array.splice(Math.floor(Math.random() * this.trend_array.length), 1)[0]
     },
     keyDown(){
       addEventListener('keydown', (e) => {
+
+
         //打ち間違えてしまったときの処理
         if(e.key !== this.word[0]){
+            if(e.shiftKey)return
           //comleteしている状態だったらカウント増やさない。
-          if(this.words.length === 0 ||this.word.length === 0)
+          if(this.trends.length === 0)
           {
               return
           }
@@ -115,8 +121,8 @@ export default {
         this.word = this.word.slice(1)
         if(this.word.length === 0){
           this.pressed = ''
-          if(this.words.length === 0){
-            if(this.word)
+          if(this.trend_array.length === 0){
+
             this.word = 'Completed! ミスの回数は'+this.miss +'回だったよ！'
             this.miss="CLEAR"
             return
